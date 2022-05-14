@@ -3,6 +3,18 @@
 # from turtle import distance
 import numpy as np
 
+
+def format_obstacles(obstacles):
+    new_format = []
+    i = 0
+    while i < len(obstacles):
+        new_format.append([obstacles[i][0], obstacles[i][1]])
+        new_format.append([obstacles[i][0], obstacles[i+1][1]])
+        new_format.append([obstacles[i+1][0], obstacles[i+1][1]])
+        new_format.append([obstacles[i+1][0], obstacles[i][1]])
+        i += 2
+    return new_format
+
 def check_point_between_coords(point, coord1, coord2):
     if coord1 > coord2:
         coord1, coord2 = coord2, coord1

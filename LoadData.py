@@ -1,6 +1,7 @@
 import numpy as np
 
 
+
 def load_data(file_name):
     """
     Loads the data from the file and returns a numpy array.
@@ -19,8 +20,9 @@ def load_data(file_name):
             RobotStart.append(int(line.split(':')[1].split(',')[0].split('(')[1]))
             RobotStart.append(int(line.split(':')[1].split(',')[1].split(')')[0]))
         elif line[0] == 'X':
-            Obstacles.append([[int(line.split(':')[1].split(';')[0].split(',')[0].split('(')[1]), int(line.split(':')[1].split(';')[0].split(',')[1].split(')')[0])],
-             [int(line.split(':')[1].split(';')[1].split(',')[0].split('(')[1]), int(line.split(':')[1].split(';')[1].split(',')[1].split(')')[0])]])
+            Obstacles.append([int(line.split(':')[1].split(';')[0].split(',')[0].split('(')[1]), int(line.split(':')[1].split(';')[0].split(',')[1].split(')')[0])])
+
+            Obstacles.append([int(line.split(':')[1].split(';')[1].split(',')[0].split('(')[1]), int(line.split(':')[1].split(';')[1].split(',')[1].split(')')[0])])
         elif 48 <= ord(line[0]) <= 57:
             numb += line[0]
             k = 1
