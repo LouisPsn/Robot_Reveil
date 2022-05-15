@@ -18,9 +18,27 @@ def format_obstacles(obstacles):
 def check_point_between_coords(point, coord1, coord2):
     if coord1 > coord2:
         coord1, coord2 = coord2, coord1
-    return coord1 <= point <= coord2
+    return bool(coord1 < point < coord2)
 
 def crossing_segments(seg1, seg2):
+
+    #if the segments are vertical
+    if seg1[0][0] == seg1[1][0]:
+        prop_1x = check_point_between_coords(seg1[0][0], seg2[0][0], seg2[1][0])
+        prop_2x = check_point_between_coords(seg1[1][0], seg2[0][0], seg2[1][0])
+        prop_1y = check_point_between_coords(seg2[0][1], seg1[0][1], seg1[1][1])
+        prop_2y = check_point_between_coords(seg2[1][1], seg1[0][1], seg1[1][1])
+        return prop_1x and prop_2x and prop_1y and prop_2y
+    
+    elif seg2[0][0] == seg2[1][0]:
+        return crossing_segments(seg2, seg1)
+
+    #check if the segments are parallel
+    vect1 = np.array([seg1[1][0] - seg1[0][0], seg1[1][1] - seg1[0][1]])
+    vect2 = np.array([seg2[1][0] - seg2[0][0], seg2[1][1] - seg2[0][1]])
+    if np.cross(vect1, vect2) == 0:
+        return False     
+
     a1 = (seg1[1][1] - seg1[0][1])/(seg1[1][0] - seg1[0][0])
     a2 = (seg2[1][1] - seg2[0][1])/(seg2[1][0] - seg2[0][0])
 
@@ -40,6 +58,48 @@ def crossing_segments(seg1, seg2):
     #checking if the intersection is on the segment.
     return check_point_between_coords(x, seg1[0][0], seg1[1][0]) and check_point_between_coords(y, seg1[0][1], seg1[1][1]) and check_point_between_coords(x, seg2[0][0], seg2[1][0]) and check_point_between_coords(y, seg2[0][1], seg2[1][1])
 
+def remove_edges_intersecting(adjacency_matrix, robots, obstacles):
+    nb_vertices = len(robots) + len(obstacles)
+    
+    for i in range(len(robots)):
+        for j in range(len(robots)):
+            icrm = 0
+            if i < j:
+                for pt1 in range(len(obstacles)):
+                    if pt1%4 == 0 and pt1 != 0:
+                        icrm += 1
+                    for pt2 in range(4):
+                        if pt1 < pt2+icrm*4:
+                            if crossing_segments([robots[i], robots[j]],[obstacles[pt1], obstacles[pt2+icrm*4]]):
+                                adjacency_matrix[i][j] = 0
+                                adjacency_matrix[j][i] = 0
+    for i in range(len(obstacles)):
+        for j in range(len(obstacles)):
+            icrm = 0
+            if i < j:
+                for pt1 in range(len(obstacles)):
+                    if pt1%4 == 0 and pt1 != 0:
+                        icrm += 1
+                    for pt2 in range(4):
+                        if pt1 < pt2+icrm*4 and pt1 != i and pt2+icrm*4 != i and pt1 != j and pt2+icrm*4 != j:
+                            if crossing_segments([obstacles[i], obstacles[j]],[obstacles[pt1], obstacles[pt2+icrm*4]]):
+                                adjacency_matrix[i + len(robots)][j + len(robots)] = 0
+                                adjacency_matrix[j + len(robots)][i + len(robots)] = 0
+    for i in range(len(robots)):
+        for j in range(len(obstacles)):
+            icrm = 0
+            for pt1 in range(len(obstacles)):
+                if pt1%4 == 0 and pt1 != 0:
+                    icrm += 1
+                for pt2 in range(4):
+                    if pt1 < pt2+icrm*4 and pt1 != j and pt2+icrm*4 != j:
+                        if crossing_segments([robots[i], obstacles[j]],[obstacles[pt1], obstacles[pt2+icrm*4]]):
+                            adjacency_matrix[i][j + len(robots)] = 0
+                            adjacency_matrix[j + len(robots)][i] = 0
+    
+    return adjacency_matrix
+                    
+    return 0
 
 def edge_through_obstacle(edge, obs):
     for i in range (len(obs)):

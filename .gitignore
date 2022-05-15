@@ -1,2 +1,4 @@
 *.mdp
 __pycache__
+img
+*.pyc

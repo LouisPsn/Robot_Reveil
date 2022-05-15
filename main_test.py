@@ -2,8 +2,6 @@ from obstacle import *
 from LoadData import *
 from graph import *
 import numpy as np
-import matplotlib.pyplot 
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
@@ -41,8 +39,20 @@ def test_crossing_segments():
     seg8 = [[1,0], [0,1]]
     print("[1,1], [0,0] and [1,0], [0,1] :", crossing_segments(seg7, seg8), "(should be TRUE)")
 
-def main():
+    seg9 = [[20, 10], [20, 12]]
+    seg10 = [[19, 11], [21, 11]]
+    print("[20, 10], [20, 12] and [19, 11], [21, 11]:", crossing_segments(seg9, seg10), "(should be TRUE)")
 
+    seg11 = [[20, 10], [20, 12]]
+    seg12 = [[18, 10], [19, 11]]
+    print("[20, 10], [20, 12] and [18, 10], [19, 11]:", crossing_segments(seg11, seg12), "(should be FALSE)")
+
+    seg13 = [[10, 10], [25, 4]]
+    seg14 = [[20, 12], [25, 10]]
+    print("[10, 10], [25, 4] and [20, 12], [25, 10]:", crossing_segments(seg13, seg14), "(should be FALSE)")
+
+
+def main():
     test_format_obstacles()
     test_crossing_segments()
     test_load_file()

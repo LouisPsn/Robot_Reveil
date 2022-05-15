@@ -2,8 +2,8 @@ from obstacle import *
 from LoadData import *
 from graph import *
 import numpy as np
-import matplotlib.pyplot 
-matplotlib.use('Agg')
+# import matplotlib.pyplot 
+# matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 np.set_printoptions(precision=3, linewidth=200)
 
@@ -19,8 +19,10 @@ def main():
     #initializing adjacency matrix
     nb_vertices = len(robots) + len(obstacles)
     adjacency_matrix = np.zeros([nb_vertices, nb_vertices])
-    res= connect_all_vertices(robots, obstacles, adjacency_matrix)
-    print(res)
+    adjacency_matrix = connect_all_vertices(robots, obstacles, adjacency_matrix)
+    #display_graph(adjacency_matrix, robots, obstacles)
+    adjacency_matrix = remove_edges_intersecting(adjacency_matrix, robots, obstacles)
+    display_graph(adjacency_matrix, robots, obstacles)
     
     return 0
 
