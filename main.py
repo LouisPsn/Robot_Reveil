@@ -1,4 +1,3 @@
-from obstacle import *
 from LoadData import *
 from graph import *
 import numpy as np
@@ -19,10 +18,9 @@ def main():
     #initializing adjacency matrix
     nb_vertices = len(robots) + len(obstacles)
     adjacency_matrix = np.zeros([nb_vertices, nb_vertices])
-    adjacency_matrix = connect_all_vertices(robots, obstacles, adjacency_matrix)
-    #display_graph(adjacency_matrix, robots, obstacles)
-    adjacency_matrix = remove_edges_intersecting(adjacency_matrix, robots, obstacles)
-    display_graph(adjacency_matrix, robots, obstacles)
+    adjacency_matrix = connect_once(robots, obstacles, adjacency_matrix)
+    display_graph(adjacency_matrix, robots, obstacles, "first_connect")
+    print(adjacency_matrix)
     
     return 0
 
